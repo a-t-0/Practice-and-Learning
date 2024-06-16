@@ -21,7 +21,7 @@ export class fileObject {
         if(pObject)
         {
             if(!this.children)
-            {   
+            {
                 this.children = [];
             }
             this.children.push(pObject);

@@ -29,11 +29,11 @@ export default function d3Tree(data, { // data is either tabular (array of objec
     strokeOpacity = 0.4, // stroke opacity for links
     strokeLinejoin, // stroke line join for links
     strokeLinecap, // stroke line cap for links
-    halo = "#fff", // color of label halo 
+    halo = "#fff", // color of label halo
     haloWidth = 3, // padding around the labels
     curve = d3Shapes.bumpX, // curve for the link
   } = {}) {
-  
+
     // If id and parentId options are specified, or the path option, use d3.stratify
     // to convert tabular data to a hierarchy; otherwise we assume that the data is
     // specified as an object {children} with nested objects (a.k.a. the “flare.json”
@@ -41,19 +41,19 @@ export default function d3Tree(data, { // data is either tabular (array of objec
     const root = path != null ? d3.stratify().path(path)(data)
         : id != null || parentId != null ? d3.stratify().id(id).parentId(parentId)(data)
         : d3.hierarchy(data, children);
-  
+
     // Sort the nodes.
     if (sort != null) root.sort(sort);
-  
+
     // Compute labels and titles.
     const descendants = root.descendants();
     const L = label == null ? null : descendants.map(d => label(d.data, d));
-  
+
     // Compute the layout.
     const dx = 10;
     const dy = width / (root.height + padding);
     tree().nodeSize([dx, dy])(root);
-  
+
     // Center the tree.
     let x0 = Infinity;
     let x1 = -x0;
@@ -61,13 +61,13 @@ export default function d3Tree(data, { // data is either tabular (array of objec
       if (d.x > x1) x1 = d.x;
       if (d.x < x0) x0 = d.x;
     });
-  
+
     // Compute the default height.
     if (height === undefined) height = x1 - x0 + dx * 2;
-  
+
     // Use the required curve
     if (typeof curve !== "function") throw new Error(`Unsupported curve`);
-  
+
     const svg = d3Selection.create("svg")
         .attr("viewBox", [-dy * padding / 2, x0 - dx, width, height])
         .attr("width", width)
@@ -75,7 +75,7 @@ export default function d3Tree(data, { // data is either tabular (array of objec
         .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
         .attr("font-family", "sans-serif")
         .attr("font-size", 10);
-  
+
     svg.append("g")
         .attr("fill", "none")
         .attr("stroke", stroke)
@@ -89,7 +89,7 @@ export default function d3Tree(data, { // data is either tabular (array of objec
           .attr("d", d3Link.link(curve)
               .x(d => d.y)
               .y(d => d.x));
-  
+
     const node = svg.append("g")
       .selectAll("a")
       .data(root.descendants())
@@ -97,14 +97,14 @@ export default function d3Tree(data, { // data is either tabular (array of objec
         .attr("xlink:href", link == null ? null : d => link(d.data, d))
         .attr("target", link == null ? null : linkTarget)
         .attr("transform", d => `translate(${d.y},${d.x})`);
-  
+
     node.append("circle")
         .attr("fill", d => d.children ? stroke : fill)
         .attr("r", r);
-  
+
     if (title != null) node.append("title")
         .text(d => title(d.data, d));
-  
+
     if (L) node.append("text")
         .attr("dy", "0.32em")
         .attr("x", d => d.children ? -6 : 6)
@@ -113,7 +113,7 @@ export default function d3Tree(data, { // data is either tabular (array of objec
         .attr("stroke", halo)
         .attr("stroke-width", haloWidth)
         .text((d, i) => L[i]);
-  
+
     return svg.node();
   }
 

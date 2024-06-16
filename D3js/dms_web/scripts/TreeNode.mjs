@@ -14,13 +14,13 @@ export default class TreeNode{
         this.children = [];
     }
 
-    /*************************************** 
+    /***************************************
      * NAME: setParent()
      * PURPOSE: Set the parent of the current node, and update the children list of the parent node
     ****************************************/
     setParent(map, parentName) {
-        let parentNode = map.get(parentName);  
-        
+        let parentNode = map.get(parentName);
+
         if(parentNode)
         {
             this.parent = parentNode;

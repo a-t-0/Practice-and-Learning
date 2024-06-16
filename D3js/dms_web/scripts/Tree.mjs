@@ -14,7 +14,7 @@ export default class Tree{
 
     // Insert method, we insert, looking for the parent node with the same ID
     // This may take a while so it may serve useful to take note of the layer of the tree as well.
-    insert(node, map) 
+    insert(node, map)
     {
         // Check if the parent exists in the tree
         if(node.parent != null)
@@ -32,7 +32,7 @@ export default class Tree{
     {
         let node = getNode(id);
         node.children = children;
-    }    
+    }
 
     // Get node
     getNode(id)
@@ -41,7 +41,7 @@ export default class Tree{
         let current = this.root;
 
         // Loop through to find the node with the corresponding ID
-        while(current && !found) 
+        while(current && !found)
         {
             // How will we know which node is the next one to go to?
             // Depth of recursion?

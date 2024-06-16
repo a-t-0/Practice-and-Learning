@@ -61,7 +61,7 @@ class GraphImplementation extends Component<IGraphImplementationProps, IGraphImp
             .attr("height", height)
             .attr("viewbox", [-dy / 3, x0 - dx, width, height])
             .attr("style", "max-width: 100%; height: auto; font: 10px Tahoma;");
-        
+
             const link = svg.append("g")
             .attr("fill", "none")
             .attr("stroke", "#555")
@@ -73,7 +73,7 @@ class GraphImplementation extends Component<IGraphImplementationProps, IGraphImp
             .attr("d", d3.linkHorizontal()
                 .x((d: { y: any; }) => d.y)
                 .y((d: { x: any; }) => d.x));
-        
+
         const node = svg.append("g")
             .attr("stroke-linejoin", "round")
             .attr("stroke-width", 3)
@@ -81,11 +81,11 @@ class GraphImplementation extends Component<IGraphImplementationProps, IGraphImp
         .data(root.descendants())
         .join("g")
             .attr("transform", (d: { y: any; x: any; }) => `translate(${d.y},${d.x})`);
-    
+
         node.append("circle")
             .attr("fill", (d: { children: any; }) => d.children ? "#555" : "#999")
             .attr("r", 2.5);
-    
+
         node.append("text")
             .attr("dy", "0.31em")
             .attr("x", (d: { children: any; }) => d.children ? -6 : 6)
@@ -93,7 +93,7 @@ class GraphImplementation extends Component<IGraphImplementationProps, IGraphImp
             .text((d: { data: { name: any; }; }) => d.data.name)
             .attr("stroke", "white")
             .attr("paint-order", "stroke");
-        
+
         return svg.node();
     }
 
@@ -106,4 +106,4 @@ class GraphImplementation extends Component<IGraphImplementationProps, IGraphImp
 
         let testMGP = new fileObject("testMGP", [testPRO1, testPRO2]);
     }
-} 
+}

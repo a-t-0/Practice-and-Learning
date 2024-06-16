@@ -1,3 +1,4 @@
+// import data from './data.json' assert {type: 'json'};
 document.addEventListener("DOMContentLoaded", function() {
     let container = document.getElementById('container');
 
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
         linkTarget = "_blank", // the target attribute for links (if any)
         width = 640, // outer width, in pixels
         height, // outer height, in pixels
-        r = 3, // radius of nodes
+        r = 4, // radius of nodes
         padding = 20, // horizontal padding for first and last column (Larger is smaller padding)
         fill = "#999", // fill for nodes
         fillOpacity, // fill opacity for nodes
@@ -26,11 +27,11 @@ document.addEventListener("DOMContentLoaded", function() {
         strokeOpacity = 0.4, // stroke opacity for links
         strokeLinejoin, // stroke line join for links
         strokeLinecap, // stroke line cap for links
-        halo = "#fff", // color of label halo 
+        halo = "#fff", // color of label halo
         haloWidth = 3, // padding around the labels
         curve = d3.curveBumpX, // curve for the link
       } = {}) {
-      
+
         // If id and parentId options are specified, or the path option, use d3.stratify
         // to convert tabular data to a hierarchy; otherwise we assume that the data is
         // specified as an object {children} with nested objects (a.k.a. the “flare.json”
@@ -38,19 +39,19 @@ document.addEventListener("DOMContentLoaded", function() {
         const root = path != null ? d3.stratify().path(path)(data)
             : id != null || parentId != null ? d3.stratify().id(id).parentId(parentId)(data)
             : d3.hierarchy(data, children);
-      
+
         // Sort the nodes.
         if (sort != null) root.sort(sort);
-      
+
         // Compute labels and titles.
         const descendants = root.descendants();
         const L = label == null ? null : descendants.map(d => label(d.data, d));
-      
+
         // Compute the layout.
         const dx = 10; // The dx is the vertical spacing
         const dy =0.4* width / (root.height + padding); // The dy is the horizontal spacing.
         tree().nodeSize([dx, dy])(root);
-      
+
         // Center the tree.
         let x0 = Infinity;
         let x1 = -x0;
@@ -58,20 +59,20 @@ document.addEventListener("DOMContentLoaded", function() {
           if (d.x > x1) x1 = d.x;
           if (d.x < x0) x0 = d.x;
         });
-      
+
         // Compute the default height.
         if (height === undefined) height = x1 - x0 + dx * 2;
-      
+
         // Use the required curve
         if (typeof curve !== "function") throw new Error(`Unsupported curve`);
-      
+
         // function updateTextbox(newText) {
             // const textboxElement = document.getElementById("myTextboxId");
             // textboxElement.value = newText;
             // console.log("Hello");
         // }
-      
-          
+
+
         const svg = d3.create("svg")
             .attr("viewBox", [-dy * padding / 2, x0 - dx, width, height])
             .attr("width", width)
@@ -79,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
             .attr("font-family", "sans-serif")
             .attr("font-size", 10);
-      
+
         svg.append("g")
             .attr("fill", "none")
             .attr("stroke", stroke)
@@ -93,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
               .attr("d", d3.link(curve)
                   .x(d => d.y)
                   .y(d => d.x));
-      
+
         const node = svg.append("g")
           .selectAll("a")
           .data(root.descendants())
@@ -101,64 +102,35 @@ document.addEventListener("DOMContentLoaded", function() {
             .attr("xlink:href", link == null ? null : d => link(d.data, d))
             .attr("target", link == null ? null : linkTarget)
             .attr("transform", d => `translate(${d.y},${d.x})`)
-            .on("click", function(event, d) {
-                console.log("ClickedAD!" + d.data.title);
-                console.log(d);
-                alert(d.data.title);  // Assumes that your data has a 'title' property
-            });
-      
+
+
         node.append("circle")
             .attr("fill", d => d.children ? stroke : fill)
             .attr("r", r);
         node.append("title")
         .text(d => d.data.title);  // Assumes that your data has a 'title' property
-        
 
-            
-        node.on("click", function (d) {
+
+
+        node.on("click", function (d,i) {
             console.log("Clicked!.");
-            console.log(d);
-            console.log("d.id" +d.id);
-            console.log("d.data" +d.data);
-            console.log("d.name" +d.name);
-            console.log("d.children" +d.children);
-            console.log("node.id" +node.id);
-            console.log("node.data" +node.data);
-            console.log("node.name" +node.name);
-            console.log("node.children" +node.children);
-            if (d.target && d.target.children) {
-                // Loop through children to find the element with the title "Root"
-                for (const child of d.target.children) {
-                  if (child.title && child.title === "Root") {
-                    // Title found, return it
-                    console.log("got"+child.title);
-                  }
-                }
-              }
-            console.log(node);
-            console.log(d.target);
+            // console.log("d,i="+d+" and i = "+i);
+            console.log(i);
+            console.log(i.data.name);
+
             //     // Update the text box content with node data (e.g., name)
         //     const textBox = document.getElementById("text-box"); // Update selector to match your text box element
         //     textBox.textContent = d.data.name; // Update with desired data property
-        
+
         //     // Optional: Highlight clicked node (example using class)
         //     d3.select(this).classed("clicked", true);
-
-        
-        // printAllAttributes(d);
-        // printAllAttributes(node);
-        // console.log(d.target.title);
-        // console.log(d.target.dataset.title);
-        // for (const prop in d) {
-            // console.log(prop, ":", d[prop]);
-        //   }
         });
-    
-    
-    
+
+
+
         if (title != null) node.append("title")
             .text(d => title(d.data, d));
-      
+
         if (L) node.append("text")
             .attr("dy", "0.32em")
             .attr("x", d => d.children ? -6 : 6)
@@ -179,15 +151,15 @@ document.addEventListener("DOMContentLoaded", function() {
                     console.log("i=" + i);
                     console.log(d);
                     alert(L[i]);  // Print L[i] when the node is clicked
+                    document.getElementById(`summary`).value = L[i];
                 });
             });
-            console.log(L);
 
         return svg.node();
       }
 
     // Sample hierarchical data
-    var data = {
+    var swag = {
         "name": "Root",
         "children": [
             {
@@ -206,6 +178,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         ]
     };
+    // var data = require('./data.json'); //with path
+    
+    var data = DATA;
 
     // This function creates a hierarchical tree visualization using the provided data.
     // It expects the data to be formatted as an object with nested objects (similar to the "flare.json" format).
@@ -214,20 +189,20 @@ document.addEventListener("DOMContentLoaded", function() {
     let chart = Tree(data, {
         // Function to provide the display name for each node in the tree.
         label: d => d.name,
-    
+
         // Function to generate hover text for each node.
         // It builds a string by joining the names of all ancestor nodes in reverse order, separated by dots (.).
         title: (d, n) => `${n.ancestors().reverse().map(d => d.data.name).join(".")}`,
-    
+
         // Function to define the link URL for each node.
         // It constructs a URL based on the node's position in the hierarchy.
         // For leaf nodes (no children), it uses the ".as" extension.
         // link: (d, n) => `https://github.com/prefuse/Flare/${n.children ? "tree" : "blob"}/master/flare/src/${n.ancestors().reverse().map(d => d.data.name).join("/")}${n.children ? "" : ".as"}`,
-    
+
         // Override the default width for the chart.
         // width: 1152
       });
-  
-      
+
+
     container.append(chart);
 });

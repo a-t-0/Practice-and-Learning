@@ -40,7 +40,7 @@ export default class TreeGraphic extends Component {
                 strokeOpacity = 0.4, // stroke opacity for links
                 strokeLinejoin, // stroke line join for links
                 strokeLinecap, // stroke line cap for links
-                halo = "#fff", // color of label halo 
+                halo = "#fff", // color of label halo
                 haloWidth = 3, // padding around the labels
                 curve = d3.curveBumpX, // curve for the link
                 } = {}) => {
@@ -50,14 +50,14 @@ export default class TreeGraphic extends Component {
                     const root = path != null ? d3.stratify().path(path)(data)
                         : id != null || parentId != null ? d3.stratify().id(id).parentId(parentId)(data)
                         : d3.hierarchy(data, children);
-            
+
                     // Sort the nodes.
                     if (sort != null) root.sort(sort);
-            
+
                     // Compute labels and titles.
                     const descendants = root.descendants();
                     const L = label == null ? null : descendants.map(d => label(d.data, d));
-            
+
                     // Compute the layout.
                     const dx = 10;
                     //   const dy = root.height + padding;
@@ -66,7 +66,7 @@ export default class TreeGraphic extends Component {
                     console.log(1);
                     tree().nodeSize([dx, dy])(root);
                     console.log(2);
-            
+
                     // Center the tree.
                     let x0 = Infinity;
                     let x1 = -x0;
@@ -74,13 +74,13 @@ export default class TreeGraphic extends Component {
                         if (d.x > x1) x1 = d.x;
                         if (d.x < x0) x0 = d.x;
                     });
-            
+
                     // Compute the default height.
                     if (height === undefined) height = x1 - x0 + dx * 2;
-            
+
                     // Use the required curve
                     if (typeof curve !== "function") throw new Error(`Unsupported curve`);
-            
+
                     const svg = d3.create("svg")
                         .attr("viewBox", [-dy * padding, x0 - dx, width, height])
                         .attr("width", width)
@@ -88,7 +88,7 @@ export default class TreeGraphic extends Component {
                         .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
                         .attr("font-family", "sans-serif")
                         .attr("font-size", 10);
-            
+
                     svg.append("g")
                         .attr("fill", "none")
                         .attr("stroke", stroke)
@@ -102,7 +102,7 @@ export default class TreeGraphic extends Component {
                             .attr("d", d3.linkVertical(curve)
                                 .x(d => d.x*4)
                                 .y(d => d.y/2));
-            
+
                     // Might be able to do something with onHover(), such as bring the text forward when it is hovering over the child element.
                     const node = svg.append("g")
                         .selectAll("a")
@@ -111,14 +111,14 @@ export default class TreeGraphic extends Component {
                         .attr("xlink:href", link == null ? null : d => link(d.data, d))
                         .attr("target", link == null ? null : linkTarget)
                         .attr("transform", d => `translate(${d.x*4},${d.y/2})`);
-            
+
                     node.append("circle")
                         .attr("fill", d => d.children ? stroke : fill)
                         .attr("r", r);
-            
+
                     if (title != null) node.append("title")
                         .text(d => title(d.data, d));
-            
+
                     if (L) node.append("text")
                         .attr("dy", "0.32em")
                         .attr("x", d => d.children ? -6 : 6)
@@ -127,7 +127,7 @@ export default class TreeGraphic extends Component {
                         .attr("stroke", halo)
                         .attr("stroke-width", haloWidth)
                         .text((d, i) => L[i]);
-            
+
                     return svg.node();
                 },
                 loaded: true
