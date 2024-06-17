@@ -109,7 +109,8 @@ document.addEventListener("DOMContentLoaded", function() {
             // console.log("d,i="+d+" and i = "+i);
             console.log(i);
             console.log(i.data.name);
-            alert(i.data.summary);
+            // alert(i.data.summary);
+            // USED!
             document.getElementById(`summary`).value = i.data.summary;
 
             //     // Update the text box content with node data (e.g., name)
