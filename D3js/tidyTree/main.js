@@ -1,4 +1,3 @@
-// import data from './data.json' assert {type: 'json'};
 document.addEventListener("DOMContentLoaded", function() {
     let container = document.getElementById('container');
 
@@ -16,10 +15,10 @@ document.addEventListener("DOMContentLoaded", function() {
         title, // given a node d, returns its hover text
         link, // given a node d, its link (if any)
         linkTarget = "_blank", // the target attribute for links (if any)
-        width = 640, // outer width, in pixels
+        width = 1600, // outer width, in pixels
         height, // outer height, in pixels
         r = 4, // radius of nodes
-        padding = 20, // horizontal padding for first and last column (Larger is smaller padding)
+        padding = 1, // horizontal padding for first and last column (Larger is smaller padding)
         fill = "#999", // fill for nodes
         fillOpacity, // fill opacity for nodes
         stroke = "#555", // stroke for links
@@ -48,8 +47,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const L = label == null ? null : descendants.map(d => label(d.data, d));
 
         // Compute the layout.
-        const dx = 10; // The dx is the vertical spacing
-        const dy =0.4* width / (root.height + padding); // The dy is the horizontal spacing.
+        const dx = 12; // The dx is the vertical spacing
+        const dy =15+ width / (root.height + padding); // The dy is the horizontal spacing.
         tree().nodeSize([dx, dy])(root);
 
         // Center the tree.
@@ -65,12 +64,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Use the required curve
         if (typeof curve !== "function") throw new Error(`Unsupported curve`);
-
-        // function updateTextbox(newText) {
-            // const textboxElement = document.getElementById("myTextboxId");
-            // textboxElement.value = newText;
-            // console.log("Hello");
-        // }
 
 
         const svg = d3.create("svg")
@@ -113,10 +106,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
         node.on("click", function (d,i) {
-            console.log("Clicked!.");
             // console.log("d,i="+d+" and i = "+i);
             console.log(i);
             console.log(i.data.name);
+            alert(i.data.summary);
+            document.getElementById(`summary`).value = i.data.summary;
 
             //     // Update the text box content with node data (e.g., name)
         //     const textBox = document.getElementById("text-box"); // Update selector to match your text box element
@@ -139,47 +133,17 @@ document.addEventListener("DOMContentLoaded", function() {
             .attr("stroke", halo)
             .attr("stroke-width", haloWidth)
             .text((d, i) => L[i])
-            // .on("click", function(event, d, i) {
-                // console.log("Clibbbbbbbbbcked!");
-                // console.log("i="+i);
-                // console.log(d);
-                // alert(L[i]);  // Print L[i] when the node is clicked
-            // })
             .each(function(d, i) {
                 d3.select(this).on("click", function(event) {
-                    console.log("Clicked!");
-                    console.log("i=" + i);
-                    console.log(d);
-                    alert(L[i]);  // Print L[i] when the node is clicked
-                    document.getElementById(`summary`).value = L[i];
+                    // alert(L[i]);  // Print L[i] when the node is clicked
+                    // document.getElementById(`summary`).value = L[i];
                 });
             });
 
         return svg.node();
       }
 
-    // Sample hierarchical data
-    var swag = {
-        "name": "Root",
-        "children": [
-            {
-                "name": "Child 1",
-                "children": [
-                    { "name": "Grandchild 1" },
-                    { "name": "Grandchild 2" }
-                ]
-            },
-            {
-                "name": "Child 2",
-                "children": [
-                    { "name": "Grandchild 3" },
-                    { "name": "Grandchild 4" }
-                ]
-            }
-        ]
-    };
-    // var data = require('./data.json'); //with path
-    
+    // DATA is loaded from file.
     var data = DATA;
 
     // This function creates a hierarchical tree visualization using the provided data.

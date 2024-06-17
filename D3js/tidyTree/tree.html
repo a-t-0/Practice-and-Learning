@@ -1,15 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
     <meta charset="UTF-8">
-    
-    Summary:<input type="text" id="summary" value="Node 0a" style="width: 1200px; height: 60px;">
-
+    <!-- <input type="text" id="summary" value="Node 0a" style="width: 400px; height: 400px;"> -->
+    <!-- <textarea id="summary" style="width: 400px; height: 400px;">Node 0a</textarea> -->
+    <textarea id="summary" style="width: 400px; height: 400px; line-height: normal;">Node 0a</textarea>
     <head>
+        <style>
+            /* Your CSS code here */
+            #summary {
+              position: fixed;
+              bottom: 0;
+              right: 0;
+              width: 300px;
+              height: 200px;
+              background-color: #fff;
+              text-align: center;
+              line-height: 60px;
+              overflow-wrap: break-word; /* Enable line wrapping */
+            }
+        
+            #summary p {
+              margin: 0;
+              padding: 0;
+              font-size: 12px;
+            }
+            
+          </style>
         <title>Tidy Tree</title>
         <meta charset="UTF-8"/>
         <meta name="viewport"  content="width=device-width, initial-scale=1.0"/>
         <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-        <script src="data0.js" ></script>    
+        <!-- <script src="data0.js" ></script> -->
+        <script src="d3_data.json" ></script>
         <script src="./main.js"></script>
     </head>
     <body>
